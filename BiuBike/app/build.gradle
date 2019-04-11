@@ -1,0 +1,83 @@
+apply plugin: 'com.android.application'
+android {
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
+    signingConfigs {
+        compileSdkVersion 26
+        buildToolsVersion "26.0.2"
+        release {
+            keyAlias 'biubike'
+            keyPassword 'bikeup'
+            storeFile file('biubike.jks')
+            storePassword 'bikeup'
+        }
+        defaultConfig {
+            applicationId "com.biubike"
+            minSdkVersion 16
+            targetSdkVersion 22
+            versionCode 211
+            versionName "2.1.1"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+            javaCompileOptions { annotationProcessorOptions { includeCompileClasspath = true }}
+            }
+
+        lintOptions {
+            checkReleaseBuilds false
+            abortOnError false
+        }
+
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.release
+
+        }
+        release {
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable false
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
+
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def fileName = "Biubike" + "_V${defaultConfig.versionName}(${defaultConfig.versionCode})_" +
+                            variant.name +
+                            ".apk"
+                    outputFileName = fileName
+                }
+            }
+
+        }
+    }
+
+}
+
+def releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26+'
+    compile files('libs/baidumapapi_base_v4_1_1.jar')
+    compile files('libs/baidumapapi_map_v4_1_1.jar')
+    compile files('libs/nineoldandroids-2.4.0.jar')
+    compile 'com.android.support:recyclerview-v7:25.1.0'
+    compile files('libs/baidumapapi_util_v4_1_1.jar')
+    compile files('libs/gson-2.2.1.jar')
+    compile project(':xrecyclerview')
+    compile files('libs/BaiduNaviSDK_3.2.0.jar')
+    compile files('libs/Msc.jar')
+    compile files('libs/Msc.jar')
+    api 'cat.ereza:customactivityoncrash:2.2.0'
+
+}
+
